@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet author="furkan.sahin" id="1">
+        <createTable tableName="revinfo">
+        <column name="rev" type="serial" autoIncrement="true">
+            <constraints nullable="false" primaryKey="true"
+                         primaryKeyName="pk_rev_info" />
+        </column>
+        <column name="REVTSTMP" type="timestamp"/>
+    </createTable>
+        <createTable tableName="book">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="isbn" type="VARCHAR(13)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_stock" type="INT"/>
+            <column name="price" type="double"/>
+        </createTable>
+        <createTable tableName="customer">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="first_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone_number" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="change_timestamp" type="timestamp with time zone"/>
+            <column name="changed_by" type="VARCHAR(255)"/>
+        </createTable>
+        <createTable tableName="customer_aud">
+            <column name="id" type="serial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="int">
+                <constraints referencedTableName="revinfo"
+                             foreignKeyName="fk_customer_revinfo"
+                             referencedColumnNames="rev"
+                             nullable="false"/>
+            </column>
+            <column name="revtype" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone_number" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" type="text">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="customer_order">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="customer_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_amount" type="double"/>
+            <column name="change_timestamp" type="timestamp with time zone"/>
+            <column name="changed_by" type="VARCHAR(255)"/>
+        </createTable>
+        <createTable tableName="customer_order_aud">
+            <column name="id" type="serial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_amount" type="double"/>
+            <column name="customer_id" type="INT"/>
+        </createTable>
+        <createTable tableName="book_order">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="customer_order_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="book_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <sql>insert into book (name, isbn, in_stock, price) values ('Book_1', '1111111111111', 5, 10.0);</sql>
+        <sql>insert into book (name, isbn, in_stock, price) values ('Book_2', '2222222222222', 10, 4.0);</sql>
+        <sql>insert into book (name, isbn, in_stock, price) values ('Book_3', '3333333333333', 1, 2.0);</sql>
+        <rollback>
+            <dropTable tableName="revision_info"/>
+            <dropTable tableName="book"/>
+            <dropTable tableName="customer"/>
+            <dropTable tableName="customer_aud"/>
+            <dropTable tableName="customer_order"/>
+            <dropTable tableName="customer_order_aud"/>
+            <dropTable tableName="book_order"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>
